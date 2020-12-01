@@ -1,3 +1,4 @@
+//ola
 /* tutaj bedzie kod glowny */
 /* test */
 #include <stdio.h>
