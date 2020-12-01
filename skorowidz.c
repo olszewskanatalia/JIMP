@@ -1,9 +1,10 @@
-/* tutaj jest funkcja wypisujaca skorowidz :333 */
+/* tutaj jest funkcja wypisujaca skorowidz */
 
+#include <stdio.h>
 
-void wypisz_skorowidz(int **skoro,int *slowa, int ile_slow)
+void wypisz_skorowidz(int **skoro,char **slowa, int ile_slow)
 {
-	for(int i = 0; i < ile_slow)
+	for(int i = 0; i < ile_slow;i++)
 	{
 		if(skoro[i][0] == 0 )
 		{
@@ -11,7 +12,7 @@ void wypisz_skorowidz(int **skoro,int *slowa, int ile_slow)
 		}
 		else
 		{
-			printf("Slowo: %s , wystapilo w lini(ach): \n",slowo[i]);
+			printf("Slowo: %s , wystapilo w lini(ach): \n",slowa[i]);
 
 			for(int k = 1; k < skoro[i][0]; k++)
 			{
