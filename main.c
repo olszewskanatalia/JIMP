@@ -49,10 +49,12 @@ int main( int argc, char ** argv)
 
 
 
-	/*funkcja szukaj slow*/
+	wyszukaj( in, ile_slow, skorowidz, slowa);
+
 
 	/* funkcja wypisz skorowidz */
 
+	 wypisz_skorowidz(skorowidz ,slowa, ile_slow);
 
 
 	for( int i = 0; i < ile_slow; i++)
