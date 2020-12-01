@@ -14,7 +14,8 @@ int main( int argc, char ** argv)
 	int ile_linii;
 	int ile_slow = argc - 2;
 	char ** slowa = malloc((argc - 1)*sizeof(char*));
-	
+	int **skorowidz;
+
 	for(int i = 0; i < argc-1; i++)
 	{
 		slowa[i] = argv[1+i];
@@ -32,12 +33,32 @@ int main( int argc, char ** argv)
 		return EXIT_FAILURE;
 	}
 
+	/* przypisanie ilosci wierszy ( liczby slow)*/
+	skorowidz = malloc(ile_slow * sizeof (int)); 
+	
+	for( int i = 0; i < ile_slow; i++)
+	{
+		skorowidz[i] = malloc(1 * sizeof(int));
+		/* rezerwacja pamieci dla kolumn */
+		/* poczatkowa to liczba wszystkich odszukanych linii*/
+		skorowidz[i][0] = 0;
+		/* na poczatku 0 odszukanych linii */
+	}
+
+
+
+
 	/*funkcja szukaj slow*/
 
 	/* funkcja wypisz skorowidz */
 
 
-	free(slowa);
+
+	for( int i = 0; i < ile_slow; i++)
+	{
+		free(skorowidz[i]);		/* zwolnieni pamieci kolumn */
+	}
+	free(slowa); /*zwolnieni pamieci wierszy */
 
 
 	
