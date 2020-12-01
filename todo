@@ -1,0 +1,15 @@
+to do:
+
+> interfejs cokolwiek to znaczy
+
+> rozdzielić na funkcje:
+
+>>>>> f.main
+>>>>> wyszukiewanie słów w linii
+>>>>> wypisywanie skorowidza
+
+> funkcje w różnych plikach
+
+> skrypt make do do automatycznej kompilacji
+
+> struktura skorowidza zmieniona z list liniowych na tablice o zmiennej dlugosci 
