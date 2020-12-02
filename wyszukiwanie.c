@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define BUFSIZE 8192
 
@@ -14,6 +15,9 @@ void wyszukaj(FILE *plik, int ile_slow, int **skorowidz, char **slowa)
 	int d_slow;
 	int literka;
 	int ktora_linia = 0;
+	char * znaki = (char *) malloc (3);
+	strcpy(znaki, ",.)(]}{[-_+=!?&%$#@;:><");
+	int ile_z = strlen(znaki);
 
 
 	while( fgets( buf, BUFSIZE, plik ) != NULL )
@@ -22,83 +26,147 @@ void wyszukaj(FILE *plik, int ile_slow, int **skorowidz, char **slowa)
 
 		for(int i = 0; i < ile_slow; i++)
 		{
-			 d_slow = strlen(slowa[i]);
-                         literka = 0;
+			d_slow = strlen(slowa[i]);
+                        bool na_poczatku = true;
+		      	int n_buf = strlen(buf);
+			char *nowy;
+			bool na_koncu = true;
 
-			for(int j = 0; j < strlen(buf); j++)
+		       	/*sprawdzenie czy jest na poczatku*/
+			
+			if(buf[0]==slowa[i][0])
 			{
-	
-				if(literka < d_slow)
+				if(n_buf >= d_slow)
 				{
-					if(buf[j] == slowa[i][literka])
+					for(int k = 1; k < d_slow; k++)
 					{
-						if(literka == 0)
-						{
-							if(j == 0)
-							{
-								literka++;
-							}
-							else 
-							{
-								if((buf[j-1] >= 'a' && buf[j-1] <= 'z') || (buf[j-1] >= 'A' && buf[j-1] <= 'Z'))
-								{
-									literka = 0;
-								}
-								else
-								{
-									literka++;
-								}
-							}
-						
-						}
-						
-						if(literka == d_slow-1)
-                                                {
-                                                        if(j == strlen(buf)-1)
-                                                        {
-                                                        	dodaj (skorowidz , i , ktora_linia);
+						if(buf[k] != slowa[i][k])
+						{	
+							na_poczatku = false;
+							break;
+						}	
 
-							}
-							else
-							{
-								if((buf[j+1] >= 'a' && buf[j+1] <= 'z') || (buf[j+1] >= 'A' && buf[j+1] <= 'Z'))
-                                                                {
-                                                                        literka = 0;
-                                                                }
-                                                                else
-                                                                {
-                                                                         dodaj (skorowidz , i , ktora_linia);
-                                                                }
-
-							}
-                                                }
-
-						literka++;
-	
 					}
-					else
+					if(d_slow < n_buf && na_poczatku == true) 
 					{
-						literka = 0;	
+						if(!((buf[d_slow]>='a' && buf[d_slow]<= 'z' )|| (buf[d_slow]>='A' && buf[d_slow]<='Z')))
+						{
+							/*jest na poczatku*/ /*dodaj*/ /*continue*/
+							
+							  dodaj (skorowidz,i, ktora_linia); 
+
+							
+							continue;
+
+						}
+					 	na_poczatku = false;
+					}
+					if(d_slow == n_buf && na_poczatku == true)
+					{
+						/*jest w linii jedno wlasnie to slowo*/ /*dodaj*/ /*contiune*/
+						
+						 dodaj (skorowidz,i, ktora_linia); 
+			
+                                                
+						continue;
 
 					}
 				}
-			}		
+			}	
+
+			/*tutaj jak dojdzie to znaczy ze nie jest to pierwsze slowo */
+
+			/*sprawdzenie czy slowo jest na koncu */
+
+
+			else if(buf[n_buf - 2] == slowa[i][d_slow - 1])
+			{
+				
+				if(n_buf > d_slow)
+				{
+				
+				
+
+					int p = n_buf -2;
+					int h = d_slow -1;	
+					for(; h>=0;)
+					{
+						if(buf[p] != slowa[i][h])
+						{
+							na_koncu = false;
+							break;
+						}
+						p--;
+						h--;
+					}
+					
+
+					if(na_koncu== true)
+					{	
+					 if(!((buf[p]>='a' && buf[p]<= 'z' )|| (buf[p]>='A' && buf[p]<='Z')))
+	                                  {
+                   	                       /*jest na koncu*/ /*dodaj*/ /*continue*/
+
+						  dodaj (skorowidz,i, ktora_linia); 
+						  continue;
+
+                                           }
+					}       
+
+					
+					
+				}	
+			
+			}
+
+			/*skoro nie jest ani na poczatku ani na koncu to musi byc otoczone innymi znakami*/
+			else
+			{
+					
+					nowy = (char*) malloc (2+d_slow);
+					
+					strcat(nowy, " ");
+					strcat(nowy, slowa[i]);
+					strcat(nowy, " ");
+
+
+					if((strstr(buf, nowy))!= NULL)
+					{	
+						/*znaleziono slowo*/
+						/*dodaj*/ 
+							
+						dodaj (skorowidz,i, ktora_linia); 
+						continue;
+					}
+					int nowy_roz = strlen(nowy);
+					for(int y= 0; y<ile_z; y++)
+					{
+						nowy[nowy_roz -1] = znaki[y];
+						if((strstr(buf, nowy))!=NULL)
+						{
+							dodaj(skorowidz, i, ktora_linia);
+							break;
+						}
+					}
 		
-		}
-
-	}	
-
-
+			
+					free(nowy);
+				
+			}
+		}		
 
 	
+	}	
+
+	free(znaki);
+		
+	fclose(plik);
 }
 
 void dodaj (int **skoro, int index_slowa, int nr_linii)
 {
 	int ile_linii = skoro[index_slowa][0];
 
-	skoro[index_slowa] = realloc(skoro[index_slowa], sizeof(int)*(ile_linii + 1));
-	/* chyba reallokuje pamiec poprzedniego zwiekszajac o jeden zarezerwowane miejsce */
 
 	skoro[index_slowa][ile_linii+1] = nr_linii; /* zapisanie nr linii na ostatnie pole */
 
